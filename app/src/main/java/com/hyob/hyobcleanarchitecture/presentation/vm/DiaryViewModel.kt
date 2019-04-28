@@ -41,13 +41,6 @@ class DiaryViewModel(private val diaryRepository: DiaryRepository) : BaseViewMod
         }
     }
 
-    fun deleteDiary(diaryId: Long) {
-        disposables += diaryRepository.deleteDiaryOnDb(diaryId)
-            .subscribe {
-
-            }
-    }
-
     fun showDiaryDeleteCheckBox(show: Boolean) {
         diaryDeleteCheckBox.postValue(show)
     }
@@ -56,9 +49,6 @@ class DiaryViewModel(private val diaryRepository: DiaryRepository) : BaseViewMod
     fun getDiaryCreated(): LiveData<Unit> = diaryCreated
     fun getDiaryDeleteCheckBox(): LiveData<Boolean> = diaryDeleteCheckBox
 
-    enum class Type {
-        LIST, WRITE, DETAIL
-    }
 
 }
 

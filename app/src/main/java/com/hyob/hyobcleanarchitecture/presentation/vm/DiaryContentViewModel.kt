@@ -13,6 +13,8 @@ class DiaryContentViewModel(
     private val diaryRepository: DiaryRepository) : BaseViewModel(), DiaryUseCase {
 
     private val diaryDetail = MutableLiveData<DiaryViewData>()
+    private val diaryDeleted = MutableLiveData<Unit>()
+
 
     override fun getRepository(): DiaryRepository = diaryRepository
 
@@ -25,7 +27,15 @@ class DiaryContentViewModel(
             })
     }
 
+    fun deleteDiary() {
+        disposables += deleteDiary(diaryId)
+            .subscribe {
+                diaryDeleted.postValue(Unit)
+            }
+    }
+
     fun getDiaryDetail(): LiveData<DiaryViewData> = diaryDetail
+    fun getDiaryDeleted(): LiveData<Unit> = diaryDeleted
 
 }
 

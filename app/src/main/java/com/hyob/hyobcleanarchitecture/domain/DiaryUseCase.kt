@@ -26,4 +26,9 @@ interface DiaryUseCase : RepositoryProvider<DiaryRepository> {
         getRepository().readDiaeryById(id)
             .subscribeOn(Schedulers.io())
             .map { DiaryEntityMapper.mapEntityToView(it) }
+
+    fun deleteDiary(id: Long) =
+        getRepository().deleteDiaryOnDb(id)
+            .subscribeOn(Schedulers.io())
+
 }

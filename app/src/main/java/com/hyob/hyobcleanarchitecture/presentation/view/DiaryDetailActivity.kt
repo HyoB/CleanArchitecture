@@ -4,6 +4,10 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProviders
 import com.hyob.hyobcleanarchitecture.R
 import com.hyob.hyobcleanarchitecture.base.BaseActivity
@@ -26,15 +30,45 @@ class DiaryDetailActivity : BaseActivity<DiaryContentViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_diary_detail)
+        setSupportActionBar(toolbar)
 
         vm.getDiaryDetail().observe {
             updateDiaryUi(it)
         }
+
+        vm.getDiaryDeleted().observe {
+            finish()
+        }
     }
 
-    private fun updateDiaryUi(diaryViewData: DiaryViewData) = with(diaryViewData){
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_diary_detail, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean =
+        when (item?.itemId) {
+            R.id.action_diary_delete -> {
+                showDeleteConfirmDialog()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+
+    fun updateDiaryUi(diaryViewData: DiaryViewData) = with(diaryViewData){
         textDiaryTitle.text = title
         textDiaryContent.text = content
+    }
+
+    fun showDeleteConfirmDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("다이어리 삭제")
+            .setMessage("정말로 삭제하시겠습니까?")
+            .setPositiveButton("삭제") { _, _ ->
+                vm.deleteDiary()
+            }
+            .setNegativeButton("취소") { _, _ ->}
+            .show()
     }
 
     companion object {
